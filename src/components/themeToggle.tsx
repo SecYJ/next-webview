@@ -1,12 +1,12 @@
 "use client";
-import * as React from "react";
 import { Button } from "./ui/button";
+import { useState, useEffect } from "react";
 
 export function ThemeToggle() {
-	const [mounted, setMounted] = React.useState(false);
-	const [isDark, setIsDark] = React.useState(false);
+	const [mounted, setMounted] = useState(false);
+	const [isDark, setIsDark] = useState(false);
 
-	React.useEffect(() => {
+	useEffect(() => {
 		setMounted(true);
 		try {
 			const stored = localStorage.getItem("theme");
@@ -14,8 +14,7 @@ export function ThemeToggle() {
 			const dark = stored ? stored === "dark" : prefersDark;
 			setIsDark(dark);
 			document.documentElement.classList.toggle("dark", dark);
-		} catch (_e) {
-			// noop
+		} finally {
 		}
 	}, []);
 
@@ -24,15 +23,14 @@ export function ThemeToggle() {
 	function toggleTheme() {
 		const next = !isDark;
 		setIsDark(next);
-    try {
-        localStorage.setItem("theme", next ? "dark" : "light");
-        const root = document.documentElement;
-        root.classList.toggle("dark", next);
-        root.style.colorScheme = next ? "dark" : "light";
-    } catch (_e) {
-        // noop
-    }
-}
+		try {
+			localStorage.setItem("theme", next ? "dark" : "light");
+			const root = document.documentElement;
+			root.classList.toggle("dark", next);
+			root.style.colorScheme = next ? "dark" : "light";
+		} finally {
+		}
+	}
 
 	return (
 		<Button variant="outline" onClick={toggleTheme} aria-label="Toggle theme">

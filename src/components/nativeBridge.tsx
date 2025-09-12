@@ -6,12 +6,16 @@ export type NativeMessage = { type: string; [key: string]: unknown };
 
 export function useNativeBridge(onMessageFromNative?: (msg: NativeMessage) => void) {
 	const isInWebView = useMemo(() => {
-		return typeof window !== "undefined" && Boolean((window as any).__RN_WEBVIEW__);
+		return (
+			typeof window !== "undefined" && Boolean((window as unknown as { __RN_WEBVIEW__: boolean }).__RN_WEBVIEW__)
+		);
 	}, []);
 
 	const sendToNativeRef = useRef((msg: NativeMessage) => {
 		if (typeof window === "undefined") return;
-		(window as any).ReactNativeWebView?.postMessage(JSON.stringify(msg));
+		(
+			window as unknown as { ReactNativeWebView: { postMessage: (msg: string) => void } }
+		).ReactNativeWebView?.postMessage(JSON.stringify(msg));
 	});
 
 	useEffect(() => {

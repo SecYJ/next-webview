@@ -1,8 +1,8 @@
 "use client";
-import * as React from "react";
+import { LabelHTMLAttributes } from "react";
 import { cn } from "@/lib/utils";
 
-export interface LabelProps extends React.LabelHTMLAttributes<HTMLLabelElement> {}
+export type LabelProps = LabelHTMLAttributes<HTMLLabelElement>;
 
 export function Label({ className, ...props }: LabelProps) {
 	return (
