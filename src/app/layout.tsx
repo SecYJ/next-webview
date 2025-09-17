@@ -4,8 +4,6 @@ import Script from "next/script";
 import Link from "next/link";
 import "./globals.css";
 import { ThemeToggle } from "@/components/themeToggle";
-import PushNotificationManager from "@/components/push-notification-manager";
-import InstallPrompt from "@/components/install-prompt";
 import { ReactNode } from "react";
 
 export const metadata: Metadata = {
@@ -67,9 +65,6 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 						{children}
 					</main>
 				</div>
-
-				<PushNotificationManager />
-				<InstallPrompt />
 			</body>
 		</html>
 	);
