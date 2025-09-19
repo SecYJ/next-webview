@@ -18,6 +18,7 @@ const navItems: Array<{ href: string; label: string }> = [
 	{ href: "/users/new", label: "New User" },
 	{ href: "/sound", label: "Sound" },
 	{ href: "/scan-qr", label: "Scan QR" },
+	{ href: "/data", label: "Data" },
 ];
 
 export default function RootLayout({ children }: { children: ReactNode }) {
@@ -40,6 +41,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 
 			<body className="min-h-screen bg-white text-black dark:bg-neutral-950 dark:text-neutral-50">
 				<ReactScan />
+				{/* <FirebaseMessagingInit /> */}
 				<div className="grid min-h-screen grid-cols-[220px_1fr]">
 					<aside className="border-r border-neutral-200 bg-neutral-50 dark:border-neutral-800 dark:bg-neutral-950">
 						<div className="px-4 py-4 text-base font-semibold">Admin</div>
