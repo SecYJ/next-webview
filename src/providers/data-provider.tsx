@@ -1,16 +1,42 @@
 "use client";
 
 import { firestore } from "@/lib/firebase.client";
-import { CollectionReference, DocumentData, FirestoreError, collection, onSnapshot } from "firebase/firestore";
+import {
+	FirestoreDataConverter,
+	FirestoreError,
+	QueryDocumentSnapshot,
+	SnapshotOptions,
+	collection,
+	onSnapshot,
+} from "firebase/firestore";
 import { createContext, use, useEffect, useMemo, useState, type ReactNode } from "react";
 
-type FirestoreDocument = {
+type UserDocument = {
+	firestoreId: string;
 	id: string;
-	[key: string]: unknown;
+	username: string;
+};
+
+const userConverter: FirestoreDataConverter<UserDocument> = {
+	toFirestore: ({ id, username }) => ({
+		username,
+		...(id ? { id } : {}),
+	}),
+	fromFirestore: (snapshot: QueryDocumentSnapshot, options: SnapshotOptions | undefined) => {
+		const data = snapshot.data(options);
+		const id = data.id ? String(data.id) : snapshot.id;
+		const username = data.username ? String(data.username) : "";
+
+		return {
+			firestoreId: snapshot.id,
+			id,
+			username,
+		};
+	},
 };
 
 type DataContextValue = {
-	data: FirestoreDocument[];
+	data: UserDocument[];
 	loading: boolean;
 	error: string | null;
 };
@@ -28,7 +54,7 @@ export const useData = () => {
 };
 
 export const DataProvider = ({ children }: { children: ReactNode }) => {
-	const [data, setData] = useState<FirestoreDocument[]>([]);
+	const [data, setData] = useState<UserDocument[]>([]);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
 
@@ -37,17 +63,27 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
 
 		try {
 			const db = firestore();
-			const ref: CollectionReference<DocumentData> = collection(db, "users");
+			const ref = collection(db, "users").withConverter(userConverter);
 
 			unsubscribe = onSnapshot(
 				ref,
 				(snapshot) => {
 					setLoading(false);
 					setData(
-						snapshot.docs.map((doc) => ({
-							id: doc.id,
-							...doc.data(),
-						}))
+						snapshot.docs.map((doc) => {
+							const user = doc.data();
+							const username = user.username ?? "";
+							const id = user.id ?? doc.id;
+							console.debug("[DataProvider] fetched user", {
+								documentId: doc.id,
+								payload: { ...user, id, username },
+							});
+							return {
+								firestoreId: doc.id,
+								id,
+								username,
+							};
+						})
 					);
 				},
 				(err: FirestoreError) => {
@@ -110,7 +146,7 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
 		[data, error, loading]
 	);
 
-	return <DataContext value={value}>{children}</DataContext>;
+	return <DataContext.Provider value={value}>{children}</DataContext.Provider>;
 };
 
 export default DataProvider;

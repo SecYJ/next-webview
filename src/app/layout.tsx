@@ -18,7 +18,8 @@ const navItems: Array<{ href: string; label: string }> = [
 	{ href: "/users/new", label: "New User" },
 	{ href: "/sound", label: "Sound" },
 	{ href: "/scan-qr", label: "Scan QR" },
-	{ href: "/data", label: "Data" },
+	{ href: "/firebase", label: "Firebase" },
+	{ href: "/chat", label: "Chat" },
 ];
 
 export default function RootLayout({ children }: { children: ReactNode }) {

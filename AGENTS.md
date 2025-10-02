@@ -11,6 +11,7 @@ Run `npm run dev` for the standard development server, or `npm run dev:https` wh
 ## Coding Style & Naming Conventions
 
 This codebase is strict TypeScript with React 19. Default to server components inside `src/app` and mark client files only when hooks or browser APIs are required. Follow the existing tab indentation, double-quoted strings, and trailing commas shown in current files. Declare functions as arrow expressions (`const handleScan = () => {}`); avoid `function` declarations and skip explicit return type annotations. Keep file names kebab-cased (for routes), and reuse composable UI primitives under `src/components/ui` instead of bespoke styling.
+Prefer the `cn` helper from `@/lib/utils` whenever class names need conditional logic instead of inline string concatenation or ternaries.
 
 ## Testing Guidelines
 

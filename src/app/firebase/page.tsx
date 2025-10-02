@@ -1,14 +1,14 @@
 "use client";
 
 import { DataProvider } from "@/providers/data-provider";
-import Count from "./_count";
+import DisplayData from "./_display-data";
 
-const DataPage = () => {
+const FirebasePage = () => {
 	return (
 		<DataProvider>
-			<Count />
+			<DisplayData />
 		</DataProvider>
 	);
 };
 
-export default DataPage;
+export default FirebasePage;
